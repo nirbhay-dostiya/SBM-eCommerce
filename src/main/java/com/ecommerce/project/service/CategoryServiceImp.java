@@ -37,32 +37,49 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public String deleteCategory(Long categoryId) {
-        List<Category> categories = categoryRepository.findAll();
-        Category category = categories.stream()
-                .filter(c -> c.getCategoryId().equals(categoryId))
-                .findFirst()
-                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND , "Resourse not found"));
 
+        // ye list optional ko hata ke categoryRepository user kar rahe h
+
+//        List<Category> categories = categoryRepository.findAll();
+//        Category category = categories.stream()
+//                .filter(c -> c.getCategoryId().equals(categoryId))
+//                .findFirst()
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND , "Resourse not found"));
+//
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
         categoryRepository.delete(category);
-        return "Category with categoryId " + categoryId + " is Deleted Successfully";
+        return "Category with categoryId: " + categoryId + " deleted successfully !!";
+
     }
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
 
-//        ye local variable h
-        List<Category> categories = categoryRepository.findAll();
-        Optional<Category> optionalCategory = categories.stream()
-                .filter(c -> c.getCategoryId().equals(categoryId))
-                .findFirst();
+        // ye local verial ko dismis kar diye taki categoryRepository use kar sake
 
-        if(optionalCategory.isPresent()){
-            Category existingCategory = optionalCategory.get();
-            existingCategory.setCategoryName(category.getCategoryName());
-            Category saveCategory = categoryRepository.save(existingCategory);
-            return saveCategory;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND , "Category not found");
-        }
+//        ye niche wala local variable h
+//        List<Category> categories = categoryRepository.findAll();
+//        Optional<Category> optionalCategory = categories.stream()
+//                .filter(c -> c.getCategoryId().equals(categoryId))
+//                .findFirst();
+//
+//        if(optionalCategory.isPresent()){
+//            Category existingCategory = optionalCategory.get();
+//            existingCategory.setCategoryName(category.getCategoryName());
+//            Category saveCategory = categoryRepository.save(existingCategory);
+//            return saveCategory;
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND , "Category not found");
+//        }
+
+//    categoryRepository ka use kar rahe taki code optimal ho
+        Category savedCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found"));
+
+        category.setCategoryId(categoryId);
+        savedCategory = categoryRepository.save(category);
+        return savedCategory;
+
     }
 }
