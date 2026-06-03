@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @NotBlank
+    @NotBlank // This is for validation its means users not give null value
+
+//  @Size(min = 5)  // this is to constrain the size so atleast .... words must write
+    @Size(min = 5, message = "Category must contain 5 characters")  // for custom message
     private String categoryName;
 
 }
