@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exception.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class CategoryServiceImp implements CategoryService{
 //                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND , "Resourse not found"));
 //
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId",categoryId));
         categoryRepository.delete(category);
         return "Category with categoryId: " + categoryId + " deleted successfully !!";
 
@@ -58,7 +59,8 @@ public class CategoryServiceImp implements CategoryService{
 
         // ye local verial ko dismis kar diye taki categoryRepository use kar sake
 
-//        ye niche wala local variable h
+//   ye niche wala local variable h
+
 //        List<Category> categories = categoryRepository.findAll();
 //        Optional<Category> optionalCategory = categories.stream()
 //                .filter(c -> c.getCategoryId().equals(categoryId))
@@ -75,7 +77,13 @@ public class CategoryServiceImp implements CategoryService{
 
 //    categoryRepository ka use kar rahe taki code optimal ho
         Category savedCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId",categoryId));
+
+                   // this is for custom exception handling
+                        // () --> new ResourceNotFoundException("Category", "categoryId",categoryId)
+
+                   // thsi is manual exception handling
+                       // () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found")
 
         category.setCategoryId(categoryId);
         savedCategory = categoryRepository.save(category);
