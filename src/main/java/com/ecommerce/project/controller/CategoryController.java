@@ -1,6 +1,7 @@
 package com.ecommerce.project.controller;
 
 
+import com.ecommerce.project.dto.CategoryDTO;
 import com.ecommerce.project.dto.CategoryResponse;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.service.CategoryService;
@@ -30,9 +31,9 @@ public class CategoryController {
     }
 
     @PostMapping("/api/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody  Category category){
-        categoryService.createCategory(category);
-        return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
+       CategoryDTO saveCategoryDTO =  categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
 //    @DeleteMapping("/api/admin/categories/{categoryId}")
@@ -47,7 +48,7 @@ public class CategoryController {
     public ResponseEntity<String> updateCategory(@RequestBody Category category,
                                                  @PathVariable Long categoryId){
             Category savedCategory = categoryService.updateCategory(category, categoryId);
-            return new ResponseEntity<>("Category with category id: " + categoryId, HttpStatus.OK);
+            return new ResponseEntity<>("Category updated with category id:  " + categoryId, HttpStatus.OK );
 
     }
 

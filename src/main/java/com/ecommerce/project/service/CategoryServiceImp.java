@@ -42,12 +42,14 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
-    public void createCategory(Category category) {
-        Category saveCategory = categoryRepository.findByCategoryName(category.getCategoryName());
-        if(saveCategory != null){
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = modelMapper.map(categoryDTO, Category.class);
+        Category categoryFromDb = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(categoryFromDb != null){
             throw new APIException("Category with the name " + category.getCategoryName() + " already exist...");
         }
-        categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
@@ -62,17 +64,8 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
-
-
-
         Category savedCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId",categoryId));
-
-                   // this is for custom exception handling
-                        // () --> new ResourceNotFoundException("Category", "categoryId",categoryId)
-
-                   // thsi is manual exception handling
-                       // () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found")
 
         category.setCategoryId(categoryId);
         savedCategory = categoryRepository.save(category);
