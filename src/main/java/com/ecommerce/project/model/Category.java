@@ -12,9 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "categories")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data    // Generates getters, setters, toString, etc.
+@NoArgsConstructor   // no-argument constructor (a default constructor) for your class.
+@AllArgsConstructor  // one argument for every field in your class, in the exact order they are declared.
 public class Category {
 
     @Id
